@@ -6,6 +6,8 @@ import time
 import os
 import json
 
+np.random.seed(0)
+
 units = 'min'
 cfg_file = os.environ['HOME'] + '/.pingtest_config'
 with open(cfg_file,'r') as fp:
@@ -35,7 +37,10 @@ for iserver in range(0,len(uservers)):
     #rtt = np.array([i['avg_round_trip_time_ms'] for i in theselines]) # TODO - account for N/A
     t = x['utc_time_sec'][iTheseLines]-tref
     t = t / divisor
-    ax.plot(t,x['avg_round_trip_time_ms'][iTheseLines],'--',label=server)
+    latency = x['avg_round_trip_time_ms'][iTheseLines]
+    jitter = 5*np.random.random(latency.shape) # add a tiny amount of jitter so that lines that lie right on top of each other are more visible
+    latency = latency + jitter
+    ax.plot(t,latency,'--',label=server)
 
 tref_st = time.gmtime(tref)
 ttl_str = ('%d/%d/%d %02d:%02d:%02d' % (tref_st.tm_mon,tref_st.tm_mday,tref_st.tm_year,tref_st.tm_hour,tref_st.tm_min,tref_st.tm_sec))
