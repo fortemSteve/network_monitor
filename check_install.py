@@ -33,6 +33,7 @@ import subprocess
 r = subprocess.run(['crontab','-l'],capture_output=True)
 lines = [i.strip() for i in r.stdout.decode().split('\n') if len(i)]
 lines = [i for i in lines if not i.startswith('#')]
+assert len(lines)
 found = 0
 exe_path = os.getcwd() + '/ping_test.py'
 for i in lines:

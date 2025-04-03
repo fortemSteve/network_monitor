@@ -49,6 +49,11 @@ def run_pingtest(server,timeout,nPackets):
         avg_rtt_ms = 'N/A'
     return timenow,server,pct_loss,total_time_ms,avg_rtt_ms
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--interactive',action='store_true',help='print results to stdout rather than results file')
+args = parser.parse_args()
+
 cfg_file = os.environ['HOME'] + '/.pingtest_config'
 with open(cfg_file,'r') as fp:
     cfg = json.load(fp)
@@ -64,8 +69,12 @@ if not os.path.exists(results_file):
 fp = open(results_file,'a')
 for server in servers:    
     timenow,server,pct_loss,total_time_ms,avg_rtt_ms = run_pingtest(server,timeout,nPackets)
-    
-    results_line = ('%.2f,%s,%d,%d,%.2f' % (timenow,server,pct_loss,total_time_ms,avg_rtt_ms))
-    #print(results_line)
-    fp.write(results_line); fp.write('\n')
+    if type(avg_rtt_ms) is str:
+        results_line = ('%.2f,%s,%d,%d,%s' % (timenow,server,pct_loss,total_time_ms,avg_rtt_ms))
+    else:
+        results_line = ('%.2f,%s,%d,%d,%.3f' % (timenow,server,pct_loss,total_time_ms,avg_rtt_ms))
+    if args.interactive:
+        print(results_line)
+    else:
+        fp.write(results_line); fp.write('\n')
 fp.close()

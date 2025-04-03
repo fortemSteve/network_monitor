@@ -18,3 +18,6 @@ Simple network monitoring via ping, python, and crontab
 
 # example crontab entry:
 0,30 * * * * /home/user/network_monitor/ping_test.py
+
+# usage
+- run plot_pingtest.py to plot the results of the test over time

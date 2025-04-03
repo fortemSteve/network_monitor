@@ -8,7 +8,7 @@ import json
 
 np.random.seed(0)
 
-units = 'min'
+units = 'hr'
 cfg_file = os.environ['HOME'] + '/.pingtest_config'
 with open(cfg_file,'r') as fp:
     cfg = json.load(fp)
@@ -38,7 +38,7 @@ for iserver in range(0,len(uservers)):
     t = x['utc_time_sec'][iTheseLines]-tref
     t = t / divisor
     latency = x['avg_round_trip_time_ms'][iTheseLines]
-    jitter = 5*np.random.random(latency.shape) # add a tiny amount of jitter so that lines that lie right on top of each other are more visible
+    jitter = 2*np.random.random(latency.shape) # add a tiny amount of jitter so that lines that lie right on top of each other are more visible
     latency = latency + jitter
     ax.plot(t,latency,'--',label=server)
 
@@ -48,5 +48,6 @@ fig.suptitle(f'logs begin at {ttl_str} UTC')
 ax.legend()
 ax.set_ylabel('round trip latency (ms)')
 ax.set_xlabel(f'time ({units}) since tref')
+ax.grid()
 plt.show()
     
